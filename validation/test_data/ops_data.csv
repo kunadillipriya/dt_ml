@@ -1,0 +1,109 @@
+cost_center,overhead,utilization,output
+Warehouse-North,49032,0.77,7162
+Warehouse-South,46949,0.801,7032
+Customer Service,38700,0.833,2713
+Logistics,50135,0.797,7888
+IT/Infrastructure,48415,0.734,181
+QA,27600,0.909,2537
+Warehouse-North,61789,0.87,7241
+Warehouse-South,47747,0.727,5552
+Customer Service,41043,0.757,3776
+Logistics,54734,0.824,6628
+IT/Infrastructure,40334,0.79,478
+QA,25010,0.743,2844
+Warehouse-North,76601,0.778,9822
+Warehouse-South,64503,0.87,9239
+Customer Service,38504,0.945,4276
+Logistics,65151,0.77,5859
+IT/Infrastructure,62474,0.79,229
+QA,32256,0.732,3402
+Warehouse-North,78872,0.716,7707
+Warehouse-South,60852,0.863,5366
+Customer Service,46107,0.779,4522
+Logistics,75810,0.833,9683
+IT/Infrastructure,47170,0.767,347
+QA,32581,0.712,1704
+Warehouse-North,72476,0.869,9578
+Warehouse-South,67371,0.75,6973
+Customer Service,45004,0.947,3367
+Logistics,60241,0.692,9919
+IT/Infrastructure,51895,0.832,341
+QA,29659,0.729,2369
+Warehouse-North,63887,0.815,8034
+Warehouse-South,51968,0.719,6198
+Customer Service,32320,0.892,2531
+Logistics,74146,0.736,10284
+IT/Infrastructure,53678,0.859,207
+QA,31620,0.909,3241
+Warehouse-North,58643,0.858,9606
+Warehouse-South,57962,0.78,8907
+Customer Service,35884,0.793,3098
+Logistics,69342,0.755,7784
+IT/Infrastructure,60525,0.847,253
+QA,28331,0.902,2955
+Warehouse-North,76536,0.823,10435
+Warehouse-South,55659,0.774,10388
+Customer Service,56409,0.786,3799
+Logistics,67316,0.827,8415
+IT/Infrastructure,61699,0.832,808
+QA,36286,0.744,3636
+Warehouse-North,91138,0.731,13703
+Warehouse-South,61186,0.703,7125
+Customer Service,41968,0.827,2971
+Logistics,83254,0.715,6438
+IT/Infrastructure,49912,0.734,217
+QA,40391,0.795,1491
+Warehouse-North,103459,0.707,13345
+Warehouse-South,63438,0.84,6928
+Customer Service,42188,0.889,5760
+Logistics,77333,0.858,11201
+IT/Infrastructure,71226,0.831,630
+QA,51195,0.706,4523
+Warehouse-North,116179,0.834,11648
+Warehouse-South,92500,0.813,9494
+Customer Service,50416,0.867,4381
+Logistics,97868,0.781,12831
+IT/Infrastructure,83366,0.777,389
+QA,53940,0.852,5034
+Warehouse-North,141620,0.746,17357
+Warehouse-South,110375,0.805,13713
+Customer Service,55860,0.779,5263
+Logistics,104766,0.893,16368
+IT/Infrastructure,72266,0.833,481
+QA,44665,0.769,2669
+Warehouse-North,72975,0.715,11849
+Warehouse-South,56790,0.68,5153
+Customer Service,42652,0.902,4317
+Logistics,48330,0.73,9112
+IT/Infrastructure,45413,0.793,334
+QA,22146,0.816,2557
+Warehouse-North,63635,0.74,10191
+Warehouse-South,55885,0.655,5233
+Customer Service,24161,0.82,3780
+Logistics,66938,0.712,8778
+IT/Infrastructure,38968,0.82,635
+QA,34769,0.797,1737
+Warehouse-North,76887,0.724,9291
+Warehouse-South,44952,0.789,9115
+Customer Service,47307,0.881,3228
+Logistics,54250,0.878,8620
+IT/Infrastructure,54123,0.878,731
+QA,28804,0.821,2494
+Warehouse-North,74655,0.868,10836
+Warehouse-South,51589,0.87,8710
+Customer Service,37718,0.805,4111
+Logistics,67973,0.696,8505
+IT/Infrastructure,40565,0.729,646
+QA,26909,0.74,1877
+Warehouse-North,86810,0.741,9966
+Warehouse-South,67994,0.776,6339
+Customer Service,41391,0.753,2559
+Logistics,74354,0.814,8873
+IT/Infrastructure,53635,0.828,530
+QA,40525,0.839,2914
+Warehouse-North,69232,0.897,13975
+Warehouse-South,74331,0.715,8256
+Customer Service,51527,0.863,4948
+Logistics,54521,0.853,12261
+IT/Infrastructure,47254,0.765,728
+QA,34217,0.719,2648

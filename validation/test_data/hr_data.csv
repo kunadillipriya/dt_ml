@@ -1,0 +1,53 @@
+employee_id,role,salary,hire_date,department
+EMP-1001,Junior Engineer,67424,2024-01-21,Engineering
+EMP-1002,Junior Engineer,71996,2022-08-06,Engineering
+EMP-1003,Junior Engineer,67546,2021-12-21,Engineering
+EMP-1004,Junior Engineer,78974,2023-08-11,Engineering
+EMP-1005,Software Engineer,107012,2023-02-14,Engineering
+EMP-1006,Software Engineer,94525,2025-01-22,Engineering
+EMP-1007,Software Engineer,95580,2022-05-12,Engineering
+EMP-1008,Software Engineer,88114,2024-12-05,Engineering
+EMP-1009,Software Engineer,87936,2025-03-18,Engineering
+EMP-1010,Software Engineer,86345,2022-10-04,Engineering
+EMP-1011,Software Engineer,104058,2021-07-11,Engineering
+EMP-1012,Software Engineer,94747,2023-05-13,Engineering
+EMP-1013,Senior Engineer,144445,2022-10-02,Engineering
+EMP-1014,Senior Engineer,115119,2025-03-07,Engineering
+EMP-1015,Senior Engineer,120832,2025-01-28,Engineering
+EMP-1016,Senior Engineer,144131,2024-05-23,Engineering
+EMP-1017,Engineering Manager,152246,2023-01-18,Engineering
+EMP-1018,Sales Development Rep,51613,2021-11-09,Sales
+EMP-1019,Sales Development Rep,57623,2022-07-21,Sales
+EMP-1020,Sales Development Rep,60975,2022-10-26,Sales
+EMP-1021,Account Executive,80659,2022-07-25,Sales
+EMP-1022,Account Executive,87080,2023-09-01,Sales
+EMP-1023,Account Executive,90718,2022-02-07,Sales
+EMP-1024,Account Executive,90196,2023-04-26,Sales
+EMP-1025,Account Executive,91296,2022-03-18,Sales
+EMP-1026,Account Executive,89134,2024-03-03,Sales
+EMP-1027,Senior Account Executive,129155,2023-06-06,Sales
+EMP-1028,Senior Account Executive,100455,2024-09-04,Sales
+EMP-1029,Sales Manager,134620,2023-05-27,Sales
+EMP-1030,Marketing Coordinator,59193,2022-10-19,Marketing
+EMP-1031,Marketing Coordinator,55099,2024-05-30,Marketing
+EMP-1032,Marketing Manager,95435,2022-05-22,Marketing
+EMP-1033,Marketing Manager,80059,2024-03-12,Marketing
+EMP-1034,Marketing Manager,102583,2024-10-16,Marketing
+EMP-1035,CMO,170531,2020-07-15,Marketing
+EMP-1036,Operations Coordinator,57008,2021-12-04,Operations
+EMP-1037,Operations Coordinator,60721,2024-04-27,Operations
+EMP-1038,Operations Coordinator,63083,2022-10-23,Operations
+EMP-1039,Operations Manager,94805,2023-08-10,Operations
+EMP-1040,Operations Manager,81580,2021-11-03,Operations
+EMP-1041,Director of Operations,151916,2022-04-15,Operations
+EMP-1042,CS Associate,62439,2022-09-11,Customer Success
+EMP-1043,CS Associate,60779,2024-08-20,Customer Success
+EMP-1044,CS Associate,55437,2023-09-17,Customer Success
+EMP-1045,CS Associate,57446,2023-09-22,Customer Success
+EMP-1046,CS Manager,93785,2023-07-24,Customer Success
+EMP-1047,Finance Analyst,70915,2025-03-09,Finance
+EMP-1048,Finance Manager,109734,2024-03-30,Finance
+EMP-1049,CFO,177382,2021-04-25,Finance
+EMP-1050,HR Manager,115482,2022-06-29,HR
+EMP-1051,CEO,209473,2021-10-12,Executive
+EMP-1052,COO,183312,2020-07-12,Executive
