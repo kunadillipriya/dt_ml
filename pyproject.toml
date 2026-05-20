@@ -1,12 +1,14 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "dt_ml"
 version = "0.1.0"
-description = "DecisionTwin ML package"
-requires-python = ">=3.11"
-
 dependencies = [
     "pandas",
-    "numpy",
-    "pytest",
-    "jupyter"
+    "pytest"
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
