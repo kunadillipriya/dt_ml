@@ -6,3 +6,7 @@ __all__ = ["load_csv",
            "compute_data_quality",
           "load_csv",
            "detect_column_roles", "compute_quality_score"]
+
+from .baseline_analytics import compute
+
+__all__ = ["compute"]
