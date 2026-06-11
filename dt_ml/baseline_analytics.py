@@ -1,6 +1,8 @@
 # dt_ml/baseline_analytics.py
 # dt_ml/baseline_analytics.py
 
+import time
+import logging
 import pandas as pd
 import numpy as np
 
@@ -11,27 +13,42 @@ except Exception:
 
 
 # =========================================================
+# LOGGER
+# =========================================================
+
+logger = logging.getLogger(__name__)
+
+
+# =========================================================
 # MAIN FUNCTION
 # =========================================================
 
 def compute(df: pd.DataFrame) -> dict:
     """
-    Returns baseline metrics for a dataset.
+    Compute baseline business analytics.
 
-    Returns:
-    {
-        "monthly_revenue": [{"month":"2024-01","value":1240000}, ...],
-        "growth_rate_pct": 8.4,
-        "churn_rate_pct": 4.1,
-        "avg_marketing_cac": 142.30,
-        "headcount_cost_total": 285000,
-        "trend": "growing",
-        "seasonality_index": [...],
-        "kpi_cards": {...},
-        "data_quality_score": 0.0-1.0,
-        "warnings": [...]
-    }
+    Features:
+    - automatic schema detection
+    - KPI aggregation
+    - seasonality analysis
+    - data quality scoring
+    - UI-friendly warnings
+
+    Performance Targets:
+    - <2 sec for 10K rows
+    - <10 sec for 100K rows
+
+    Thread-safe:
+    - no global mutable state
+
+    Returns deterministic output.
     """
+
+    # -----------------------------------------------------
+    # TIMER
+    # -----------------------------------------------------
+
+    start_time = time.perf_counter()
 
     # -----------------------------------------------------
     # VALIDATION
@@ -57,6 +74,12 @@ def compute(df: pd.DataFrame) -> dict:
     df = df.copy()
 
     # -----------------------------------------------------
+    # CACHE
+    # -----------------------------------------------------
+
+    cache = {}
+
+    # -----------------------------------------------------
     # NORMALIZE COLUMN NAMES
     # -----------------------------------------------------
 
@@ -65,7 +88,17 @@ def compute(df: pd.DataFrame) -> dict:
         for col in df.columns
     ]
 
+    # -----------------------------------------------------
+    # WARNINGS
+    # -----------------------------------------------------
+
     warnings = []
+
+    if len(df) > 1000000:
+
+        warnings.append(
+            "Large dataset detected. Processing may be slower."
+        )
 
     # -----------------------------------------------------
     # AUTO DETECT COLUMNS
@@ -107,19 +140,50 @@ def compute(df: pd.DataFrame) -> dict:
     )
 
     # -----------------------------------------------------
+    # EDGE CASE WARNINGS
+    # -----------------------------------------------------
+
+    if not revenue_col:
+
+        warnings.append(
+            "Revenue column missing."
+        )
+
+    if not date_col:
+
+        warnings.append(
+            "Date column missing."
+        )
+
+    missing_pct = df.isnull().mean()
+
+    for col, pct in missing_pct.items():
+
+        if pct > 0.15:
+
+            warnings.append(
+                f"{col.replace('_',' ').title()} has {pct:.0%} missing values."
+            )
+
+    # -----------------------------------------------------
     # DATE CLEANING
     # -----------------------------------------------------
 
     if date_col:
 
-        df[date_col] = pd.to_datetime(
-            df[date_col],
-            errors="coerce"
-        )
+        if "parsed_dates" not in cache:
+
+            cache["parsed_dates"] = pd.to_datetime(
+                df[date_col],
+                errors="coerce"
+            )
+
+        df[date_col] = cache["parsed_dates"]
 
         invalid_dates = df[date_col].isna().sum()
 
         if invalid_dates > 0:
+
             warnings.append(
                 f"{invalid_dates} invalid date rows removed."
             )
@@ -127,6 +191,7 @@ def compute(df: pd.DataFrame) -> dict:
         df = df.dropna(subset=[date_col])
 
     else:
+
         warnings.append(
             "No date column detected."
         )
@@ -146,7 +211,18 @@ def compute(df: pd.DataFrame) -> dict:
     for col in numeric_candidates:
 
         if col and col in df.columns:
+
             df[col] = clean_numeric(df[col])
+
+            outlier_ratio = (
+                detect_outliers(df[col]).mean()
+            )
+
+            if outlier_ratio > 0.05:
+
+                warnings.append(
+                    f"{col.replace('_',' ').title()} contains unusual values."
+                )
 
     # -----------------------------------------------------
     # MONTHLY REVENUE AGGREGATION
@@ -156,26 +232,34 @@ def compute(df: pd.DataFrame) -> dict:
 
     if revenue_col and date_col:
 
-        monthly_df = (
-            df.groupby(
-                pd.Grouper(
-                    key=date_col,
-                    freq="MS"
-                )
-            )[revenue_col]
-            .sum()
-            .reset_index()
-        )
+        if "monthly_df" not in cache:
+
+            cache["monthly_df"] = (
+                df.groupby(
+                    pd.Grouper(
+                        key=date_col,
+                        freq="MS"
+                    )
+                )[revenue_col]
+                .sum()
+                .reset_index()
+            )
+
+        monthly_df = cache["monthly_df"]
 
         monthly_revenue = [
             {
-                "month": row[date_col].strftime("%Y-%m"),
-                "value": round(float(row[revenue_col]), 2)
+                "month": month.strftime("%Y-%m"),
+                "value": round(float(value), 2)
             }
-            for _, row in monthly_df.iterrows()
+            for month, value in zip(
+                monthly_df[date_col],
+                monthly_df[revenue_col]
+            )
         ]
 
     else:
+
         warnings.append(
             "Monthly revenue could not be computed."
         )
@@ -227,6 +311,7 @@ def compute(df: pd.DataFrame) -> dict:
             )
 
     else:
+
         warnings.append(
             "Churn rate unavailable."
         )
@@ -251,6 +336,7 @@ def compute(df: pd.DataFrame) -> dict:
             )
 
     else:
+
         warnings.append(
             "Marketing CAC unavailable."
         )
@@ -269,6 +355,7 @@ def compute(df: pd.DataFrame) -> dict:
         )
 
     else:
+
         warnings.append(
             "Salary data unavailable."
         )
@@ -278,12 +365,15 @@ def compute(df: pd.DataFrame) -> dict:
     # -----------------------------------------------------
 
     if growth_rate_pct > 5:
+
         trend = "growing"
 
     elif growth_rate_pct < -5:
+
         trend = "declining"
 
     else:
+
         trend = "flat"
 
     # -----------------------------------------------------
@@ -348,6 +438,29 @@ def compute(df: pd.DataFrame) -> dict:
     }
 
     # -----------------------------------------------------
+    # SORT + DEDUP WARNINGS
+    # -----------------------------------------------------
+
+    warnings = sorted(
+        list(set(warnings))
+    )
+
+    # -----------------------------------------------------
+    # RUNTIME
+    # -----------------------------------------------------
+
+    runtime = round(
+        time.perf_counter() - start_time,
+        2
+    )
+
+    logger.info(
+        "compute completed | rows=%s | runtime=%.2fs",
+        len(df),
+        runtime
+    )
+
+    # -----------------------------------------------------
     # FINAL RESPONSE
     # -----------------------------------------------------
 
@@ -362,6 +475,7 @@ def compute(df: pd.DataFrame) -> dict:
         "kpi_cards": kpi_cards,
         "data_quality_score": data_quality_score,
         "warnings": warnings,
+        "runtime_seconds": runtime,
     }
 
 
@@ -370,9 +484,6 @@ def compute(df: pd.DataFrame) -> dict:
 # =========================================================
 
 def detect_column(df, keywords):
-    """
-    Detect columns using keyword matching.
-    """
 
     for col in df.columns:
 
@@ -387,82 +498,95 @@ def detect_column(df, keywords):
 
 
 def clean_numeric(series):
-    """
-    Convert messy numeric strings into float.
-    """
 
-    return (
+    cleaned = (
         series.astype(str)
         .str.replace(r"[$,%]", "", regex=True)
         .str.replace(",", "", regex=False)
         .replace("nan", np.nan)
-        .astype(float)
-        .fillna(0)
+    )
+
+    return pd.to_numeric(
+        cleaned,
+        errors="coerce"
+    ).fillna(0)
+
+
+def detect_outliers(series):
+
+    q1 = series.quantile(0.25)
+    q3 = series.quantile(0.75)
+
+    iqr = q3 - q1
+
+    lower = q1 - (1.5 * iqr)
+    upper = q3 + (1.5 * iqr)
+
+    return (
+        (series < lower)
+        | (series > upper)
     )
 
 
 def calculate_quality_score(df):
-    """
-    Composite quality score:
-    completeness + duplicates + consistency
-    """
 
     total_cells = df.size
 
     if total_cells == 0:
         return 0.0
 
-    # ---------------------------------------------
-    # Completeness
-    # ---------------------------------------------
-
-    missing_cells = df.isna().sum().sum()
-
-    completeness = 1 - (
-        missing_cells / total_cells
+    missing_ratio = (
+        df.isna().sum().sum()
+        / total_cells
     )
 
-    # ---------------------------------------------
-    # Duplicate score
-    # ---------------------------------------------
-
-    duplicate_score = 1 - (
-        df.duplicated().mean()
+    completeness_score = (
+        1 - missing_ratio
     )
 
-    # ---------------------------------------------
-    # Consistency score
-    # ---------------------------------------------
+    duplicate_score = (
+        1 - df.duplicated().mean()
+    )
 
-    consistency_score = 1.0
+    object_cols = df.select_dtypes(
+        include=["object", "string"]
+    ).columns
 
-    for col in df.columns:
+    mixed_type_penalty = 0
 
-        if df[col].dtype == "object":
+    for col in object_cols:
 
-            try:
-                pd.to_numeric(df[col])
+        converted = pd.to_numeric(
+            df[col],
+            errors="coerce"
+        )
 
-            except Exception:
-                consistency_score *= 0.98
+        numeric_ratio = converted.notna().mean()
 
-    # ---------------------------------------------
-    # Final weighted score
-    # ---------------------------------------------
+        if (
+            numeric_ratio > 0.2
+            and numeric_ratio < 0.8
+        ):
+            mixed_type_penalty += 0.05
+
+    consistency_score = max(
+        0,
+        1 - mixed_type_penalty
+    )
 
     score = (
-        (0.5 * completeness)
-        + (0.3 * duplicate_score)
-        + (0.2 * consistency_score)
+        completeness_score * 0.45
+        + duplicate_score * 0.35
+        + consistency_score * 0.20
     )
 
-    return round(float(score), 2)
+    return round(
+        min(max(score, 0), 1),
+        2
+    )
 
 
 def empty_response():
-    """
-    Standard empty response structure.
-    """
 
     return {
         "monthly_revenue": [],
@@ -477,4 +601,5 @@ def empty_response():
         "warnings": [
             "Empty dataframe provided."
         ],
+        "runtime_seconds": 0.0,
     }

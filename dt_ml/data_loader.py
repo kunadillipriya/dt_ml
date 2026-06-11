@@ -158,3 +158,54 @@ def summarize_dataframe(
         "missing_values": int(df.isna().sum().sum()),
         "duplicate_rows": int(df.duplicated().sum()),
     }
+
+
+import pandas as pd
+import numpy as np
+import re
+
+
+SUPPORTED_ENCODINGS = ["utf-8", "latin1", "cp1252"]
+
+
+def load_csv(file_path: str) -> pd.DataFrame:
+    """
+    Robust CSV loader for messy business datasets.
+    """
+
+    df = None
+
+    # Try multiple encodings
+    for enc in SUPPORTED_ENCODINGS:
+        try:
+            df = pd.read_csv(file_path, encoding=enc)
+            break
+        except UnicodeDecodeError:
+            continue
+
+    if df is None:
+        raise ValueError("Could not decode CSV with supported encodings.")
+        # Remove duplicates
+    df = df.drop_duplicates()
+
+# Clean numeric columns
+    for col in df.columns:
+        if df[col].dtype == "object":
+
+            # Remove commas and currency symbols
+            cleaned = (
+                df[col]
+                .astype(str)
+                .str.replace(r"[$,₹€]", "", regex=True)
+                .str.strip()
+            )
+
+            # Convert numeric-looking columns
+            numeric_version = pd.to_numeric(cleaned, errors="coerce")
+
+            if numeric_version.notna().sum() > len(df) * 0.6:
+                df[col] = numeric_version
+
+# Detect and parse date columns
+    
+    return df            
